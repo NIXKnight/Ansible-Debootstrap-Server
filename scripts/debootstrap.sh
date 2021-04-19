@@ -21,15 +21,10 @@ function setAnsibleOverrides {
 
 # Function to set ANSIBLE_PLAYBOOKS
 function setAnsiblePlaybooks {
-  if [ -f playbooks/$1 ] ; then
-    if [[ -z $ANSIBLE_PLAYBOOKS ]] ; then
-      ANSIBLE_PLAYBOOKS=" @$1"
-    else
-      ANSIBLE_PLAYBOOKS="$ANSIBLE_PLAYBOOKS @$1"
-    fi
+  if [[ -z $ANSIBLE_PLAYBOOKS ]] ; then
+    ANSIBLE_PLAYBOOKS="$1"
   else
-    echo -e "Playbook file $1 is not found!\nExiting..."
-    exit 1
+    ANSIBLE_PLAYBOOKS="$ANSIBLE_PLAYBOOKS $1"
   fi
 }
 
@@ -72,13 +67,17 @@ while true ; do
 done
 
 # Setup Python virtual environment
-echo -e "Setting up Python virtual environment..."
-if ! command -v virtualenv &> /dev/null ; then
-  echo -e "virtualenv not found!"
-  echo -e "Installing virtualenv via apt..."
-  apt update && apt -y install virtualenv
+if [[ -d /tmp/ansible_venv ]] ; then
+  echo -e "Ansible virtualenv already exists.\nSkipping virtual environment setup..."
+else
+  echo -e "Setting up Python virtual environment..."
+  if ! command -v virtualenv &> /dev/null ; then
+    echo -e "virtualenv not found!"
+    echo -e "Installing virtualenv via apt..."
+    apt update && apt -y install virtualenv
+  fi
+  virtualenv --python=/usr/bin/python3 /tmp/ansible_venv
 fi
-virtualenv --python=/usr/bin/python3 /tmp/ansible_venv
 
 # Install Ansible
 echo -e "Installing Ansible..."
@@ -86,10 +85,10 @@ source /tmp/ansible_venv/bin/activate
 pip install -r requirements/requirements.txt
 
 # Install additional Ansible roles
-ansible-galaxy install --roles-path playbooks/external-roles -r requirements/requirements.yml
+ansible-galaxy install --roles-path playbooks/external-roles -r requirements/requirements.yml --force
 
 # Run Ansible playbook(s)
 cd playbooks
-for playbook in "$(cat $ANSIBLE_PLAYBOOKS)" ; do
+for playbook in "$(echo $ANSIBLE_PLAYBOOKS)" ; do
   ansible-playbook $ANSIBLE_OVERRIDES $playbook -vv
 done
