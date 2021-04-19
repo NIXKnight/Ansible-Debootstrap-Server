@@ -1,6 +1,5 @@
 - name: Setup System Inside chroot
   connection: chroot
-  hosts: "/mnt"
   gather_facts: no
   become: True
   tasks:
@@ -11,7 +10,6 @@
 
 - name: Setup System Inside chroot
   connection: chroot
-  hosts: "/mnt"
   gather_facts: yes
   become: True
   roles:
