@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -exuo pipefail
+set -exo pipefail
 
 ANSIBLE_OVERRIDES=
 ANSIBLE_PLAYBOOKS=
