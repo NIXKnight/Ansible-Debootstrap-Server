@@ -5,3 +5,12 @@
   roles:
     - diskpart
     - debootstrap
+  tasks:
+    - name: Mount proc/sys/dev Filesystems
+      shell: "{{ item }}"
+      args:
+        executable: "/bin/bash"
+      with_items:
+        - "mount -t proc none {{ DISKPART_CHROOT_DIR }}/proc"
+        - "mount --rbind /sys {{ DISKPART_CHROOT_DIR }}/sys"
+        - "mount --rbind /dev {{ DISKPART_CHROOT_DIR }}/dev"
