@@ -1,2 +1,9 @@
 ---
 # defaults file for diskpart
+DISKPART_PACKAGES:
+  - "parted"
+DISKPART_CHROOT_DIR: ""
+DISKPART_DEVICE: ""
+DISKPART_DEVICE_PARTITIONS:
+  - { disk: "{{ DISKPART_DEVICE }}", number: 1, flags: "boot", start: "0MB", end: "256MB", unit: "MB", mountpoint: "/boot" }
+  - { disk: "{{ DISKPART_DEVICE }}", number: 2, flags: "", start: "257MB", end: "100%", unit: "MB", mountpoint: "/" }
