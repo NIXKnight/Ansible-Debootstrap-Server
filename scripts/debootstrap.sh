@@ -3,6 +3,7 @@
 set -exo pipefail
 
 ANSIBLE_OVERRIDES=
+CHROOT_PATH=
 
 # Function to set ANSIBLE_OVERRIDES
 function setAnsibleOverrides {
@@ -19,7 +20,7 @@ function setAnsibleOverrides {
 }
 
 # Parameters to be used by the script
-SHORT_OPTS="o:,p:"
+SHORT_OPTS="o:,c:"
 OPTS=$(getopt --shell bash --options $SHORT_OPTS -- $@)
 
 # Quit with error status if no or invalid parameter is provided
@@ -41,8 +42,8 @@ while true ; do
       setAnsibleOverrides $2
       shift 2
       ;;
-    -p)
-      setAnsiblePlaybooks $2
+    -c)
+      CHROOT_PATH=$2
       shift 2
       ;;
     --)
@@ -82,4 +83,4 @@ ansible-galaxy install --roles-path playbooks/external-roles -r requirements/req
 # Run Ansible playbooks
 cd playbooks
 ansible-playbook  -e ansible_python_interpreter="/usr/bin/python3" $ANSIBLE_OVERRIDES debootstrap.yml -vv
-ansible-playbook -i "$(cat input.yml | yq .DISKPART_CHROOT_DIR)," -e ansible_python_interpreter="/usr/bin/python3" $ANSIBLE_OVERRIDES chroot_run.yml -vv
+ansible-playbook -i "$CHROOT_PATH," -e ansible_python_interpreter="/usr/bin/python3" $ANSIBLE_OVERRIDES chroot_run.yml -vv
