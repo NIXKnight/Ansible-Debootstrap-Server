@@ -90,5 +90,5 @@ ansible-galaxy install --roles-path playbooks/external-roles -r requirements/req
 # Run Ansible playbook(s)
 cd playbooks
 for playbook in "$(echo $ANSIBLE_PLAYBOOKS)" ; do
-  ansible-playbook -e ansible_python_interpreter="/usr/bin/python3" $ANSIBLE_OVERRIDES $playbook -vv
+  ansible-playbook $CHROOT_HOST -e ansible_python_interpreter="/usr/bin/python3" $ANSIBLE_OVERRIDES $playbook -vv
 done
