@@ -21,7 +21,7 @@ function setAnsibleOverrides {
 
 # Function to set ANSIBLE_PLAYBOOKS
 function setAnsiblePlaybooks {
-  if [ -f $1 ] ; then
+  if [ -f playbooks/$1 ] ; then
     if [[ -z $ANSIBLE_PLAYBOOKS ]] ; then
       ANSIBLE_PLAYBOOKS=" @$1"
     else
