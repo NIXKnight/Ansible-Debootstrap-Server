@@ -1,0 +1,7 @@
+- name: Setup System Inside chroot
+  connection: chroot
+  hosts: "{{ DISKPART_CHROOT_DIR }}"
+  gather_facts: yes
+  become: True
+  roles:
+    - linux_common

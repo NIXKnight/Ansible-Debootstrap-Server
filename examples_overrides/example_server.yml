@@ -1,0 +1,77 @@
+ansible_user_id: "root"
+TIMEZONE: "Asia/Karachi"
+DEBOOTSTRAP_RELEASE: "buster"
+DEBOOTSTRAP_FULL_URL: "http://deb.debian.org/debian"
+
+DISKPART_CHROOT_DIR: "/mnt"
+DISKPART_DEVICE: "/dev/sda"
+
+LC_CLOUD_INIT_PRESERVE_SOURCES_LIST: True
+LC_CHANGE_HOSTNAME: False
+LC_CHANGE_TIMEZONE: True
+LC_TIMEZONE: "{{ TIMEZONE }}"
+LC_SET_LOCALES: True
+LC_LOCALES:
+  - "en_US ISO-8859-1"
+  - "en_US.ISO-8859-15 ISO-8859-15"
+  - "en_US.UTF-8 UTF-8"
+LC_DEFAULT_LOCALE: "en_US.UTF-8 UTF-8"
+LC_SET_DEBCONF_VALUES: False
+LC_DEBCONF_VALUES:
+  - { name: "keyboard-configuration", question: "keyboard-configuration/variant", value: "English (US)", vtype: "select" }
+  - { name: "grub-pc", question: "grub2/linux_cmdline_default", value: "biosdevname=0 net.ifnames=0 systemd.show_status=true", vtype: "string" }
+LC_CHANGES_APT_DEFAULT_SOURCES_LIST: True
+LC_MODIFY_SYSTEM_SHELL_ENV: True
+LC_MODIFY_SKEL: True
+LC_MODIFY_ROOT_SHELL_ENV: True
+LC_MODIFY_USER_SHELL_ENV: False
+LC_INSTALL_PACKAGES: True
+LC_REBOOT: False
+LC_SET_KERNEL_PARAMETERS: True
+LC_KERNEL_PARAMETERS:
+  - { name: "vm.swappiness", value: 1, state: present }
+  - { name: "vm.vfs_cache_pressure", value: 50, state: present }
+  - { name: "net.ipv4.tcp_timestamps", value: 0, state: present }
+  - { name: "net.ipv6.conf.all.disable_ipv6", value: 1, state: present }
+  - { name: "net.ipv6.conf.default.disable_ipv6", value: 1, state: present }
+  - { name: "net.ipv6.conf.lo.disable_ipv6", value: 1, state: present }
+LC_EXTRA_PACKAGES:
+  - "pciutils"
+  - "usbutils"
+  - "bzip2"
+  - "cpio"
+  - "file"
+  - "gzip"
+  - "nomarch"
+  - "pax"
+  - "unzip"
+  - "zip"
+  - "vim"
+  - "sudo"
+  - "console-setup"
+  - "libpam-systemd"
+  - "bash-completion"
+  - "curl"
+  - "git"
+  - "htop"
+  - "mtr-tiny"
+  - "linux-image-amd64"
+  - "grub-pc"
+  - "apt-transport-https"
+  - "netcat-openbsd"
+  - "apt-file"
+  - "net-tools"
+  - "cloud-guest-utils"
+  - "cloud-image-utils"
+  - "cloud-initramfs-growroot"
+  - "cloud-utils"
+  - "qemu-utils"
+  - "screen"
+  - "qemu-block-extra"
+  - "cloud-init"
+  - "qemu-guest-agent"
+  - "parted"
+  - "openssh-server"
+  - "firmware-linux-free"
+  - "intel-microcode"
+  - "amd64-microcode"
