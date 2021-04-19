@@ -1,5 +1,6 @@
 - name: Setup System Inside chroot
   connection: chroot
+  hosts: all
   gather_facts: no
   become: True
   tasks:
@@ -10,6 +11,7 @@
 
 - name: Setup System Inside chroot
   connection: chroot
+  hosts: all
   gather_facts: yes
   become: True
   roles:
