@@ -3,7 +3,6 @@
 set -exo pipefail
 
 ANSIBLE_OVERRIDES=
-ANSIBLE_PLAYBOOKS=
 
 # Function to set ANSIBLE_OVERRIDES
 function setAnsibleOverrides {
@@ -16,15 +15,6 @@ function setAnsibleOverrides {
   else
     echo -e "Override file $1 is not found!\nExiting..."
     exit 1
-  fi
-}
-
-# Function to set ANSIBLE_PLAYBOOKS
-function setAnsiblePlaybooks {
-  if [[ -z $ANSIBLE_PLAYBOOKS ]] ; then
-    ANSIBLE_PLAYBOOKS="$1"
-  else
-    ANSIBLE_PLAYBOOKS="$ANSIBLE_PLAYBOOKS $1"
   fi
 }
 
@@ -83,12 +73,12 @@ fi
 echo -e "Installing Ansible..."
 source /tmp/ansible_venv/bin/activate
 pip install -r requirements/requirements.txt
+pip install yq
 
 # Install additional Ansible roles
 ansible-galaxy install --roles-path playbooks/external-roles -r requirements/requirements.yml --force
 
-# Run Ansible playbook(s)
+# Run Ansible playbooks
 cd playbooks
-for playbook in "$(echo $ANSIBLE_PLAYBOOKS)" ; do
-  ansible-playbook $CHROOT_HOST -e ansible_python_interpreter="/usr/bin/python3" $ANSIBLE_OVERRIDES $playbook -vv
-done
+ansible-playbook  -e ansible_python_interpreter="/usr/bin/python3" $ANSIBLE_OVERRIDES debootstrap.yml -vv
+ansible-playbook -i "$(cat input.yml | yq .DISKPART_CHROOT_DIR)," -e ansible_python_interpreter="/usr/bin/python3" $ANSIBLE_OVERRIDES chroot_run.yml -vv
