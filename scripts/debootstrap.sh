@@ -70,6 +70,7 @@ else
 fi
 
 # Install Ansible
+apt-get install jq
 echo -e "Installing Ansible..."
 source /tmp/ansible_venv/bin/activate
 pip install -r requirements/requirements.txt
