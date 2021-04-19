@@ -1,0 +1,5 @@
+external-roles/*
+/venv
+*.swp
+*.retry
+!.keep
