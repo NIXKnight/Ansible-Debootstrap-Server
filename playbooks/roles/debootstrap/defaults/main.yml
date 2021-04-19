@@ -1,2 +1,5 @@
 ---
 # defaults file for debootstrap
+DEBOOTSTRAP_ARCH: "amd64"
+DEBOOTSTRAP_RELEASE: ""
+DEBOOTSTRAP_FULL_URL: ""
