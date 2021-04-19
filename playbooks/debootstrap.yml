@@ -1,5 +1,6 @@
 - name: Format Partitions and Install Debian Base System
-  hosts: all
+  connection: local
+  hosts: localhost
   gather_facts: yes
   become: True
   roles:
