@@ -1,6 +1,15 @@
 - name: Setup System Inside chroot
   connection: chroot
-  hosts: "{{ DISKPART_CHROOT_DIR }}"
+  gather_facts: no
+  become: True
+  tasks:
+    - name: Install Python 3.x
+      raw: "test -e /usr/bin/python3 || apt-get -y update && apt-get -y install python python3"
+      register: output
+      changed_when: output.stdout != ""
+
+- name: Setup System Inside chroot
+  connection: chroot
   gather_facts: yes
   become: True
   roles:
