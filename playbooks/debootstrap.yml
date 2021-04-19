@@ -1,0 +1,7 @@
+- name: Format Partitions and Install Debian Base System
+  hosts: all
+  gather_facts: yes
+  become: True
+  roles:
+    - diskpart
+    - debootstrap
