@@ -3,11 +3,11 @@ galaxy_info:
   author: Saad Ali
   description: Create disk partitions.
   license: license (MIT)
-  min_ansible_version: 2.10.7
+  min_ansible_version: 10.0.0
   platforms:
   - name: Debian
     versions:
-      - buster
+      - bookworm
   galaxy_tags:
     - disk
     - partitioning

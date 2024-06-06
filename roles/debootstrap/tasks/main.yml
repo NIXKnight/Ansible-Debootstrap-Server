@@ -1,17 +1,17 @@
 ---
 # tasks file for debootstrap
 - name: Install debootstrap
-  apt:
+  ansible.builtin.apt:
     pkg: "debootstrap"
     state: present
     update_cache: yes
 
 - name: Setup Base System
-  shell: "debootstrap --arch {{ DEBOOTSTRAP_ARCH }} {{ DEBOOTSTRAP_RELEASE }} {{ DISKPART_CHROOT_DIR }} {{ DEBOOTSTRAP_FULL_URL }}"
+  ansible.builtin.shell: "debootstrap --arch {{ DEBOOTSTRAP_ARCH }} {{ DEBOOTSTRAP_RELEASE }} {{ DISKPART_CHROOT_DIR }} {{ DEBOOTSTRAP_FULL_URL }}"
   args:
     executable: "/bin/bash"
 
 - name: Write /etc/fstab Under {{ DISKPART_CHROOT_DIR }}
-  template:
+  ansible.builtin.template:
     src: "templates/etc/fstab.j2"
     dest: "{{ DISKPART_CHROOT_DIR }}/etc/fstab"

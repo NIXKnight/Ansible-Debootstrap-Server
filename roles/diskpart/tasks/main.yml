@@ -1,20 +1,20 @@
 ---
 # tasks file for diskpart
 - name: Install Partitioning Prerequisites
-  apt:
+  ansible.builtin.apt:
     pkg: "{{ DISKPART_PACKAGES }}"
     state: present
     update_cache: yes
 
 - name: Read Device {{ DISKPART_DEVICE }}
-  parted:
+  community.general.parted:
     device: "{{ DISKPART_DEVICE }}"
     unit: "MiB"
   register: device_info
   when: DISKPART_DEVICE != None and DISKPART_DEVICE != ''
 
 - name: Remove Partitions on Device {{ DISKPART_DEVICE }}
-  parted:
+  community.general.parted:
     device: "{{ DISKPART_DEVICE }}"
     number: '{{ item.num }}'
     state: absent
@@ -22,7 +22,7 @@
   when: DISKPART_DEVICE != None and DISKPART_DEVICE != ''
 
 - name: Create Partitions on Device {{ DISKPART_DEVICE }}
-  parted:
+  community.general.parted:
     device: "{{ item.disk }}"
     number: "{{ item.number }}"
     part_start: "{{ item.start }}"
@@ -32,7 +32,7 @@
   with_items: "{{ DISKPART_DEVICE_PARTITIONS }}"
 
 - name: Set Boot Flag on 1st Partition of Device {{ DISKPART_DEVICE }}
-  parted:
+  community.general.parted:
     device: "{{ item.disk }}"
     number: "{{ item.number }}"
     part_start: "{{ item.start }}"
@@ -43,7 +43,7 @@
   with_items: "{{ DISKPART_DEVICE_PARTITIONS }}"
 
 - name: Set Boot Device
-  set_fact:
+  ansible.builtin.set_fact:
     DISKPART_BOOT_DEVICE:
       device: "{{ DISKPART_DEVICE }}{{ item.number }}"
       fs: "ext2"
@@ -52,7 +52,7 @@
   with_items: "{{ DISKPART_DEVICE_PARTITIONS }}"
 
 - name: Set Root Device
-  set_fact:
+  ansible.builtin.set_fact:
     DISKPART_ROOT_DEVICE:
       device: "{{ DISKPART_DEVICE }}{{ item.number }}"
       fs: "ext4"
@@ -61,7 +61,7 @@
   with_items: "{{ DISKPART_DEVICE_PARTITIONS }}"
 
 - name: Format Partitions
-  filesystem:
+  community.general.filesystem:
     dev: "{{ item.device }}"
     fstype: "{{ item.fs }}"
   with_items:
@@ -69,13 +69,13 @@
     - "{{ DISKPART_ROOT_DEVICE }}"
 
 - name: Create boot Directory in {{ DISKPART_CHROOT_DIR }}
-  file:
+  ansible.builtin.file:
     path: "{{ DISKPART_CHROOT_DIR }}/boot"
     state: directory
     mode: 0755
 
 - name: Mount Partitions
-  mount:
+  ansible.posix.mount:
     path: "{{ item.path }}"
     src: "{{ item.device }}"
     fstype: "{{ item.fs }}"
@@ -86,13 +86,13 @@
     - "{{ DISKPART_BOOT_DEVICE }}"
 
 - name: Get UUID for {{ DISKPART_BOOT_DEVICE.device }}
-  shell: "blkid -s UUID -o value {{ DISKPART_BOOT_DEVICE.device }}"
+  ansible.builtin.shell: "blkid -s UUID -o value {{ DISKPART_BOOT_DEVICE.device }}"
   args:
     executable: "/bin/bash"
   register: diskpart_boot_dev_uuid
 
 - name: Get UUID for {{ DISKPART_ROOT_DEVICE.device }}
-  shell: "blkid -s UUID -o value {{ DISKPART_ROOT_DEVICE.device }}"
+  ansible.builtin.shell: "blkid -s UUID -o value {{ DISKPART_ROOT_DEVICE.device }}"
   args:
     executable: "/bin/bash"
   register: diskpart_root_dev_uuid
